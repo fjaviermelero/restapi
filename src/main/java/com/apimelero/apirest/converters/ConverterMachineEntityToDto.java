@@ -1,10 +1,9 @@
 package com.apimelero.apirest.converters;
 
 import com.apimelero.apirest.dto.MachineDto;
-import com.apimelero.apirest.dto.ProductionLineDto;
 import com.apimelero.apirest.model.MachineEntity;
 
-public class ConverterMachineEntityToMachineDto {
+public class ConverterMachineEntityToDto {
 
     public static MachineDto convertMachineEntityToDto(MachineEntity machineEntity){
 

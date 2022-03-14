@@ -13,9 +13,15 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @ControllerAdvice
 public class ControllerAdvisor extends ResponseEntityExceptionHandler {
 
-@ExceptionHandler(NotFoundException.class)
-public ResponseEntity<MachineEntity> handleNotFoundException(NotFoundException ex, WebRequest request){
-    System.out.println("Running Exception Handler");
-    return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-}
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<MachineEntity> handleNotFoundException(NotFoundException ex, WebRequest request) {
+        System.out.println("Running Exception Handler");
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(ProductionLineNotExistingException.class)
+    public ResponseEntity<MachineEntity> ProductionLineNotExistingException(ProductionLineNotExistingException ex, WebRequest request) {
+        System.out.println("Running Exception Handler");
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
 }

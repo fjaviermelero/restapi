@@ -1,11 +1,10 @@
 package com.apimelero.apirest.converters;
 
 import com.apimelero.apirest.dto.MachineDto;
-import com.apimelero.apirest.dto.ProductionLineDto;
 import com.apimelero.apirest.model.MachineEntity;
 import com.apimelero.apirest.model.ProductionLineEntity;
 
-public class ConverterMachineDtoToMachineEntity {
+public class ConverterMachineDtoToEntity {
 
     public static MachineEntity convertMachineDtoToEntity(MachineDto machineDto){
 

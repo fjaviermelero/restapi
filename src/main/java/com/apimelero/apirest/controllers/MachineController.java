@@ -33,12 +33,6 @@ public class MachineController {
         return machineService.save(newMachineDto);
     }
 
-    //Only looking at ID to delete
-//    @DeleteMapping("/machines/delete")
-//    void deleteMachine(@RequestBody MachineDto deleteMachineDto){
-//        machineService.delete(deleteMachineDto);
-//    }
-
     @DeleteMapping("/machines/{id}/delete")
     void deleteMachineById(@PathVariable Long id){
         machineService.deleteById(id);

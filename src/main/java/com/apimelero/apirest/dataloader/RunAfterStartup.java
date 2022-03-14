@@ -37,6 +37,10 @@ public class RunAfterStartup {
         productionLineEntity2.setName("Production Line 2");
         productionLineRepository.save(productionLineEntity2);
 
+        ProductionLineEntity productionLineEntity3 = new ProductionLineEntity();
+        productionLineEntity3.setName("Production Line 3");
+        productionLineRepository.save(productionLineEntity3);
+
         MachineEntity machineEntity1 = new MachineEntity();
         machineEntity1.setName("Machine1");
         machineEntity1.setProductionLineEntity(productionLineEntity1);

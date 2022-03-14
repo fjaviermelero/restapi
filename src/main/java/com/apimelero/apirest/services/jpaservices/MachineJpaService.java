@@ -1,12 +1,9 @@
 package com.apimelero.apirest.services.jpaservices;
 
-import com.apimelero.apirest.converters.ConverterMachineDtoToMachineEntity.*;
-import com.apimelero.apirest.converters.ConverterMachineEntityToMachineDto.*;
 import com.apimelero.apirest.exceptions.NotFoundException;
 import com.apimelero.apirest.dto.MachineDto;
+import com.apimelero.apirest.exceptions.ProductionLineNotExistingException;
 import com.apimelero.apirest.model.MachineEntity;
-import com.apimelero.apirest.dto.ProductionLineDto;
-import com.apimelero.apirest.model.ProductionLineEntity;
 import com.apimelero.apirest.repositories.MachineRepository;
 import com.apimelero.apirest.repositories.ProductionLineRepository;
 import com.apimelero.apirest.services.MachineService;
@@ -16,8 +13,8 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.apimelero.apirest.converters.ConverterMachineDtoToMachineEntity.convertMachineDtoToEntity;
-import static com.apimelero.apirest.converters.ConverterMachineEntityToMachineDto.convertMachineEntityToDto;
+import static com.apimelero.apirest.converters.ConverterMachineDtoToEntity.convertMachineDtoToEntity;
+import static com.apimelero.apirest.converters.ConverterMachineEntityToDto.convertMachineEntityToDto;
 
 @Service
 public class MachineJpaService implements MachineService {
@@ -60,8 +57,8 @@ public class MachineJpaService implements MachineService {
 
             MachineEntity machineEntity = machineRepository.findById(aLong).get();
 
-            //Transform to Dto
             MachineDto machineDto = convertMachineEntityToDto(machineEntity);
+
             return machineDto;
         }
 
@@ -72,18 +69,17 @@ public class MachineJpaService implements MachineService {
 
     @Override
     public MachineDto save(MachineDto machineDto) {
-        MachineEntity machineEntity = convertMachineDtoToEntity(machineDto);
 
-        machineRepository.save(machineEntity);
+        if (productionLineRepository.existsById(machineDto.getProductionLineId())) {
 
-        return machineDto;
+            MachineEntity machineEntity = convertMachineDtoToEntity(machineDto);
+            machineRepository.save(machineEntity);
+            return machineDto;
+        }
+        else{
+            throw new ProductionLineNotExistingException();
+        }
     }
-
-//    @Override
-//    public void delete(MachineDto object) {
-//        //To be implemented. Using ID to delete it, but DTO does not have ID.
-//        //machineRepository.delete(object);
-//    }
 
     @Override
     public void deleteById(Long id) {
