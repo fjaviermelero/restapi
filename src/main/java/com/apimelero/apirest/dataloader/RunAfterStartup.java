@@ -61,6 +61,11 @@ public class RunAfterStartup {
         machineEntity4.setProductionLineEntity(productionLineEntity2);
         machineRepository.save(machineEntity4);
 
+        MachineEntity machineEntity5 = new MachineEntity();
+        machineEntity5.setName("Machine5");
+        machineEntity5.setProductionLineEntity(productionLineEntity2);
+        machineRepository.save(machineEntity5);
+
     }
 
 }

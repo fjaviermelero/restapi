@@ -34,6 +34,7 @@ public class MachineJpaService implements MachineService {
         //Save data from repo
         List<MachineEntity> machineEntities = new ArrayList<>();
         machineRepository.findAll().forEach(machineEntities::add);
+
         //Create Dtos list
         List<MachineDto> machineDtos = new ArrayList<>();
         //Save entities from repo to Dtos and transform
@@ -51,20 +52,24 @@ public class MachineJpaService implements MachineService {
 
     @Override
     public MachineDto findById(Long aLong) {
-        //Get machine from repo
 
-        if (machineRepository.findById(aLong).isPresent()) {
+        MachineEntity machineEntity = machineRepository.findById(aLong).orElseThrow(NotFoundException::new);
 
-            MachineEntity machineEntity = machineRepository.findById(aLong).get();
+        return convertMachineEntityToDto(machineEntity);
 
-            MachineDto machineDto = convertMachineEntityToDto(machineEntity);
-
-            return machineDto;
-        }
-
-        else {
-            throw new NotFoundException();
-        }
+//        //Refactored
+//        if (machineRepository.findById(aLong).isPresent()) {
+//
+//            MachineEntity machineEntity = machineRepository.findById(aLong).get();
+//
+//            MachineDto machineDto = convertMachineEntityToDto(machineEntity);
+//
+//            return machineDto;
+//        }
+//
+//        else {
+//            throw new NotFoundException();
+//        }
     }
 
     @Override
