@@ -53,23 +53,18 @@ public class ProductionLineJpaService implements ProductionLineService {
     @Override
     public ProductionLineDto findById(Long id) {
 
-        ProductionLineEntity productionLineEntity = productionLineRepository.findById(id).orElseThrow(NotFoundException::new);
+        if (productionLineRepository.findById(id).isPresent()) {
 
-        return convertProdLineEntityToDto(productionLineEntity);
+        ProductionLineEntity foundProdLineEntity = productionLineRepository.findById(id).get();
 
-//        //Refactored
-//        if (productionLineRepository.findById(id).isPresent()) {
-//
-//        ProductionLineEntity foundProdLineEntity = productionLineRepository.findById(id).get();
-//
-//        ProductionLineDto productionLineDto = convertProdLineEntityToDto(foundProdLineEntity);
-//
-//        return productionLineDto;
-//
-//        }
-//        else {
-//            throw new NotFoundException();
-//        }
+        ProductionLineDto productionLineDto = convertProdLineEntityToDto(foundProdLineEntity);
+
+        return productionLineDto;
+
+        }
+        else {
+            throw new NotFoundException();
+        }
     }
 
     @Override
