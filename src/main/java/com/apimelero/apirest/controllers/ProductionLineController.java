@@ -37,12 +37,8 @@ public class ProductionLineController {
     @GetMapping("/productionlines/{idProdLine}/machines/{idMachine}")
     MachineDto getMachineFromProdLine(@PathVariable Long idProdLine, @PathVariable Long idMachine){
 
-        MachineDto machineDto = machineService.findById(idMachine);
+        return machineService.findByProductionLineIdAndMachineId(idProdLine, idMachine);
 
-        if (!Objects.equals(machineDto.getProductionLineId(), idProdLine))
-            throw new NotFoundException();
-
-        return machineDto;
     }
 
     @PostMapping("/productionlines/add")

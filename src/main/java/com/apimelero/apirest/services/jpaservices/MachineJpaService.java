@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static com.apimelero.apirest.converters.ConverterMachineDtoToEntity.convertMachineDtoToEntity;
@@ -76,6 +77,17 @@ public class MachineJpaService implements MachineService {
 //        else {
 //            throw new NotFoundException();
 //        }
+    }
+
+    @Override
+    public MachineDto findByProductionLineIdAndMachineId(Long idProdLine, Long idMachine) {
+
+        MachineDto machineDto = this.findById(idMachine);
+
+        if (!Objects.equals(machineDto.getProductionLineId(), idProdLine))
+            throw new NotFoundException();
+
+        return machineDto;
     }
 
     @Override
