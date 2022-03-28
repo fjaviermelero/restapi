@@ -1,5 +1,7 @@
 package com.apimelero.apirest.services.jpaservices;
 
+import com.apimelero.apirest.converters.ConverterMachineEntityToDto;
+import com.apimelero.apirest.converters.ConverterProdLineEntityToDto;
 import com.apimelero.apirest.dto.MachineDto;
 import com.apimelero.apirest.dto.ProductionLineDto;
 import com.apimelero.apirest.exceptions.NotFoundException;
@@ -11,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.apimelero.apirest.converters.ConverterMachineEntityToDto.convertMachineEntityToDto;
 import static com.apimelero.apirest.converters.ConverterProdLineDtoToEntity.convertProdLineDtoToEntity;
@@ -33,38 +36,43 @@ public class ProductionLineJpaService implements ProductionLineService {
 
         productionLineRepository.findAll().forEach(prodLineEntities::add);
 
-        List<ProductionLineDto> prodLineDtos = new ArrayList<>();
-
-        for (ProductionLineEntity productionLineEntity: prodLineEntities){
-
-            prodLineDtos.add(convertProdLineEntityToDto(productionLineEntity));
-
-        }
-
-        if (prodLineDtos.isEmpty()){
+        if (prodLineEntities.isEmpty())
             throw new NotFoundException();
-        }
-        else {
-            return prodLineDtos;
-        }
 
+        List <ProductionLineDto> prodLineDtos = prodLineEntities.stream()
+                .map(ConverterProdLineEntityToDto::convertProdLineEntityToDto)
+                .collect(Collectors.toList());
+
+//        List<ProductionLineDto> prodLineDtos = new ArrayList<>();
+//
+//        for (ProductionLineEntity productionLineEntity: prodLineEntities){
+//            prodLineDtos.add(convertProdLineEntityToDto(productionLineEntity));
+//        }
+
+        return prodLineDtos;
     }
 
     @Override
     public ProductionLineDto findById(Long id) {
 
-        if (productionLineRepository.findById(id).isPresent()) {
-
-        ProductionLineEntity foundProdLineEntity = productionLineRepository.findById(id).get();
-
-        ProductionLineDto productionLineDto = convertProdLineEntityToDto(foundProdLineEntity);
+        ProductionLineDto productionLineDto = productionLineRepository.findById(id)
+                .map(ConverterProdLineEntityToDto::convertProdLineEntityToDto)
+                .orElseThrow(NotFoundException::new);
 
         return productionLineDto;
 
-        }
-        else {
-            throw new NotFoundException();
-        }
+//        if (productionLineRepository.findById(id).isPresent()) {
+//
+//        ProductionLineEntity foundProdLineEntity = productionLineRepository.findById(id).get();
+//
+//        ProductionLineDto productionLineDto = convertProdLineEntityToDto(foundProdLineEntity);
+//
+//        return productionLineDto;
+//
+//        }
+//        else {
+//            throw new NotFoundException();
+//        }
     }
 
     @Override

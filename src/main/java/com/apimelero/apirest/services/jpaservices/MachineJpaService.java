@@ -1,5 +1,6 @@
 package com.apimelero.apirest.services.jpaservices;
 
+import com.apimelero.apirest.converters.ConverterMachineEntityToDto;
 import com.apimelero.apirest.exceptions.NotFoundException;
 import com.apimelero.apirest.dto.MachineDto;
 import com.apimelero.apirest.exceptions.ProductionLineNotExistingException;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.apimelero.apirest.converters.ConverterMachineDtoToEntity.convertMachineDtoToEntity;
 import static com.apimelero.apirest.converters.ConverterMachineEntityToDto.convertMachineEntityToDto;
@@ -31,40 +33,49 @@ public class MachineJpaService implements MachineService {
 
     @Override
     public List<MachineDto> findAll() {
-        //Save data from repo
-        List<MachineEntity> machineEntities = new ArrayList<>();
-        machineRepository.findAll().forEach(machineEntities::add);
-        //Create Dtos list
-        List<MachineDto> machineDtos = new ArrayList<>();
-        //Save entities from repo to Dtos and transform
-        for (MachineEntity machineEntity : machineEntities){
-            machineDtos.add(convertMachineEntityToDto(machineEntity));
-        }
 
-        //Give back to Controller
-        if (machineDtos.isEmpty()){
+        List<MachineEntity> machineEntities = new ArrayList<>();
+
+        machineRepository.findAll().forEach(machineEntities::add);
+
+        if (machineEntities.isEmpty())
             throw new NotFoundException();
-        } else {
-            return machineDtos;
-        }
+
+        List<MachineDto> machineDtos = machineEntities.stream()
+                .map(ConverterMachineEntityToDto::convertMachineEntityToDto)
+                .collect(Collectors.toList());
+
+//        List<MachineDto> machineDtos = new ArrayList<>();
+//
+//        for (MachineEntity machineEntity : machineEntities){
+//            machineDtos.add(convertMachineEntityToDto(machineEntity));
+//        }
+
+        return machineDtos;
     }
 
     @Override
-    public MachineDto findById(Long aLong) {
+    public MachineDto findById(Long id) {
         //Get machine from repo
 
-        if (machineRepository.findById(aLong).isPresent()) {
+        MachineDto machineDto = machineRepository.findById(id)
+                .map(ConverterMachineEntityToDto::convertMachineEntityToDto)
+                .orElseThrow(NotFoundException::new);
 
-            MachineEntity machineEntity = machineRepository.findById(aLong).get();
+        return machineDto;
 
-            MachineDto machineDto = convertMachineEntityToDto(machineEntity);
-
-            return machineDto;
-        }
-
-        else {
-            throw new NotFoundException();
-        }
+//        if (machineRepository.findById(aLong).isPresent()) {
+//
+//            MachineEntity machineEntity = machineRepository.findById(aLong).get();
+//
+//            MachineDto machineDto = convertMachineEntityToDto(machineEntity);
+//
+//            return machineDto;
+//        }
+//
+//        else {
+//            throw new NotFoundException();
+//        }
     }
 
     @Override
